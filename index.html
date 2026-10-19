@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>FIRSTAID.exe</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="FirstAid">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#111;--bg:#fff;--pn:#FAFAFA;--mut:#666;--line:#D4D4D4;--red:#D62828;--on:#fff;--callbg:#D62828;--glow:none;--scan:none;--winsh:6px 6px 0 #111;--btnsh:0 4px 0 #111;--rowact:#eee;--focus:#D62828;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root[data-theme="dark"]{--ink:#5CFF3B;--bg:#030803;--pn:#061406;--mut:#2E8B22;--line:#1D5A16;--red:#FF5A4D;--on:#031203;--callbg:#5CFF3B;--glow:0 0 6px rgba(92,255,59,.5);--scan:repeating-linear-gradient(0deg,rgba(0,0,0,.28) 0 1px,transparent 1px 3px);--winsh:0 0 18px rgba(92,255,59,.35),inset 0 0 18px rgba(92,255,59,.1);--btnsh:0 0 8px rgba(92,255,59,.35);--rowact:rgba(92,255,59,.2);--focus:#fff;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.35 "Share Tech Mono","Courier New",monospace;min-height:100vh;text-shadow:var(--glow)}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;background:var(--scan)}
+.win{max-width:520px;margin:12px auto;border:3px solid var(--ink);border-radius:18px;box-shadow:var(--winsh);overflow:hidden;background:var(--bg)}
+.bar{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:3px solid var(--ink);font-size:20px}
+.wb{display:flex;gap:8px}.wb i,.wb button{width:34px;height:30px;border:2px solid var(--ink);border-radius:5px;display:grid;place-items:center;font:inherit;font-style:normal;color:var(--ink);background:var(--bg)}
+.wb button{cursor:pointer}
+.body{padding:14px}
+.pn{background:var(--pn);border:2px solid var(--ink);border-radius:10px;padding:12px;margin-bottom:14px}
+.pn p{margin:0;font-size:22px}
+.pb{height:20px;border:2px solid var(--ink);border-radius:4px;padding:2px;margin-top:8px;flex:1}
+.fill{height:100%;width:0;background:repeating-linear-gradient(90deg,var(--ink) 0 3px,transparent 3px 5px);transition:width 1.4s steps(30)}
+.pl{display:flex;gap:10px;align-items:center}
+input[type=search]{width:100%;background:none;border:0;color:var(--ink);font:inherit;font-size:20px;outline:0}
+input::placeholder{color:var(--mut)}
+.sr{display:flex;align-items:center;gap:8px}
+.sr button{background:var(--bg);border:2px solid var(--ink);border-radius:6px;color:var(--ink);font:inherit;font-size:16px;padding:4px 10px;cursor:pointer}
+.call,.b{display:block;text-align:center;text-decoration:none;font:inherit;color:var(--ink);background:var(--bg);border:3px solid var(--ink);border-radius:8px;padding:12px;cursor:pointer;box-shadow:var(--btnsh)}
+.call{background:var(--callbg);color:var(--on);text-shadow:none;font-weight:700;font-size:24px;margin-bottom:18px}
+.b:active,.call:active{transform:translateY(2px);opacity:.8}
+.b.go{width:100%;background:var(--ink);color:var(--on);text-shadow:none;font-weight:700;font-size:24px;margin:14px 0}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.row{display:flex;align-items:center;gap:12px;width:100%;background:none;border:0;border-bottom:1px solid var(--line);color:var(--ink);font:inherit;text-align:left;padding:10px 4px;cursor:pointer}
+.row:last-child{border-bottom:0}.row:active{background:var(--rowact)}
+.rn{flex:1;font-size:20px}.rn small{display:block;font-size:14px;color:var(--mut)}
+.chk{width:28px;height:28px;stroke:var(--ink);fill:none;stroke-width:2;flex:none}
+.msg{font-size:15px;color:var(--mut);margin-bottom:6px}
+.st{border-style:double;border-width:5px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.st small{display:block;font-size:15px}.st b{font-size:28px;font-weight:400}
+select{background:var(--bg);color:var(--ink);border:2px solid var(--ink);border-radius:6px;font:inherit;font-size:14px;padding:4px}
+#play,#studio,#contacts{display:none}
+.ir select{margin-left:auto}
+.ir{display:flex;gap:8px;align-items:center;border-bottom:1px solid var(--line);padding:6px 0}
+input[type=text],input[type=tel],textarea{width:100%;background:none;border:0;color:var(--ink);font:inherit;font-size:18px;outline:0;text-shadow:inherit;resize:vertical}
+.ca{display:inline-block;padding:6px 10px;font-size:15px;border-width:2px;box-shadow:none;margin:0}
+.srow{border-bottom:1px solid var(--line);padding:10px 0}.srow:last-child{border:0}
+.stx{font-size:16px;margin-bottom:8px}.stx.ok::before{content:"[OK] "}
+.sbt{display:flex;gap:6px;flex-wrap:wrap}.sbt button{font:inherit;font-size:15px;color:var(--ink);background:var(--bg);border:2px solid var(--ink);border-radius:6px;padding:6px 10px;cursor:pointer;text-shadow:inherit}
+.sbt button.on{background:var(--red);color:var(--on);text-shadow:none}
+.sh{font-size:20px;margin:14px 0 4px}
+.fig{padding:6px}.sc{width:100%;height:auto;display:block;stroke:var(--ink);stroke-width:3.5;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.tx{fill:var(--ink);stroke:none;font:15px "Share Tech Mono",monospace}
+#step{font-size:23px;min-height:150px}
+.tool{display:none;text-align:center}.tool.show{display:block}
+.clock{font-size:44px}
+.pump{animation:pump .545s ease-in-out infinite}@keyframes pump{50%{transform:translateY(6px)}}
+.arm{transform-origin:150px 66px;animation:armd 2.4s ease-in-out infinite}@keyframes armd{0%,30%{transform:rotate(0)}60%,100%{transform:rotate(70deg)}}
+.thr{animation:thr .9s ease-in-out infinite}@keyframes thr{50%{transform:translate(-7px,-5px)}}
+.wd{animation:wd 1s linear infinite}@keyframes wd{0%{transform:translateY(0);opacity:1}100%{transform:translateY(50px);opacity:0}}
+.shk{animation:shk .12s linear infinite}@keyframes shk{50%{transform:translateX(3px)}}
+.hp{transform-origin:172px 72px;animation:hb 1s infinite}@keyframes hb{50%{transform:scale(1.4)}}
+.legs{transform-origin:150px 142px;animation:lg 2.6s ease-in-out infinite}@keyframes lg{0%,20%{transform:rotate(0)}60%,100%{transform:rotate(-32deg)}}
+.drop{animation:dr 1.4s linear infinite}@keyframes dr{0%{transform:translateY(0);opacity:1}100%{transform:translateY(26px);opacity:0}}
+.dot{animation:bl 1.2s infinite}@keyframes bl{0%,100%{opacity:.2}50%{opacity:1}}
+textarea:focus-visible,.b:focus-visible,.row:focus-visible,.call:focus-visible,select:focus-visible,.sr button:focus-visible,.wb button:focus-visible,input:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<script>try{document.documentElement.setAttribute('data-theme',JSON.parse(localStorage.getItem('faSet')||'{}').theme||'light')}catch(e){document.documentElement.setAttribute('data-theme','light')}</script>
+</head>
+<body>
+<div class="win">
+<div class="bar"><span id="wt">FIRSTAID.exe</span><span class="wb"><i>_</i><button id="thm" aria-label="Switch light or dark theme">&#9681;</button><button id="x" aria-label="Exit">&#10005;</button></span></div>
+
+<section id="home" class="body">
+<div class="pn"><p>&gt; EMERGENCY HELP</p><p>&gt; LOADING...</p><div class="pl"><div class="pb"><div class="fill" id="boot"></div></div><span>100%</span></div></div>
+<div class="pn sr"><span>&gt;</span><input id="q" type="search" placeholder="search any symptom..." aria-label="Search" autocomplete="off"><button id="mic" aria-label="Speak your search">MIC</button></div>
+<button class="b" id="ctb" style="width:100%;margin-bottom:14px">MY CONTACTS</button>
+<a class="call" id="sos" href="tel:112">CALL 112 NOW</a>
+<div class="pn" id="list"></div>
+<div class="pn"><p>&gt; SETTINGS</p>
+<div class="ir"><span>THEME</span><select id="sthm" aria-label="Theme"><option value="light">Light</option><option value="dark">Dark (green)</option></select></div>
+<div class="ir"><span>LANGUAGE</span><select id="slang" aria-label="Language"><option value="en">English</option><option value="yo">Yorùbá (beta)</option><option value="ig">Igbo (beta)</option></select></div>
+<div class="ir"><span>SPEAKER</span><select id="sgen" aria-label="Voice type"><option value="f">Woman</option><option value="m">Man</option></select></div>
+<button class="b" id="stest" style="width:100%;margin-top:10px">&#9654; TEST VOICE</button><div class="msg" id="vmsg" style="margin-top:8px"></div></div>
+<div class="pn st"><div><small>SYSTEM STATUS:</small><b>STAND BY</b></div>
+<div><svg width="52" height="52" viewBox="0 0 56 56" style="stroke:var(--red);fill:none;stroke-width:3"><path d="M20 4H36V20H52V36H36V52H20V36H4V20H20Z"/></svg><br><select id="num" aria-label="Emergency number"><option value="112">112</option><option value="911">911</option><option value="999">999</option></select></div></div>
+<button class="b" id="inst" style="width:100%">INSTALL APP</button>
+<div class="msg" id="imsg" style="margin-top:8px"></div>
+</section>
+
+<section id="play" class="body">
+<div class="pn"><div class="pl"><span id="count"></span></div><div class="pb"><div class="fill" id="pf" style="transition:width .4s"></div></div></div>
+<div class="msg" id="vnote" style="margin:-6px 0 10px"></div>
+<div class="pn fig" id="fig"></div>
+<div class="pn" id="step" aria-live="polite"></div>
+<div class="pn tool" id="metro"><div>&gt; BEAT + BUZZ: 110 / MIN</div><button class="b" id="mbtn" style="width:100%;margin-top:8px">START BEAT</button></div>
+<div class="pn tool" id="timer"><div class="clock" id="clock">10:00</div><button class="b" id="tbtn" style="width:100%;margin-top:8px">START 10 MIN TIMER</button></div>
+<div class="two"><button class="b" id="back">&#9664; BACK</button><button class="b" id="rep">&#8635; REPEAT</button></div>
+<button class="b go" id="next">NEXT &#9654;</button>
+<div class="two"><a class="b" id="sos2" href="tel:112">CALL 112</a><button class="b" id="mute">VOICE: ON</button></div>
+</section>
+
+<section id="contacts" class="body">
+<div class="pn"><p>&gt; MY CONTACTS</p><div class="msg">Saved on this device only.</div><div id="clist"></div></div>
+<div class="pn"><div class="ir"><span>&gt;</span><input id="cn" type="text" placeholder="name" aria-label="Contact name" maxlength="30"></div><div class="ir"><span>&gt;</span><input id="cp" type="tel" placeholder="phone number" aria-label="Phone number" maxlength="20"></div><button class="b" id="cadd" style="width:100%;margin-top:10px">ADD CONTACT</button></div>
+<div class="pn"><p>&gt; MEDICAL ID</p><textarea id="med" rows="3" placeholder="blood group, allergies, medicines" aria-label="Medical ID" maxlength="300"></textarea></div>
+<div class="msg" id="cmsg"></div>
+<button class="b go" id="calert">ALERT MY CONTACTS</button>
+<a class="b" id="alink" style="display:none;margin-bottom:12px" target="_blank" rel="noopener">TAP TO SEND SMS</a>
+<button class="b" id="cx">DONE</button>
+</section>
+
+
+</div>
+
+<script>
+function L(d,w){return '<path d="'+d+'" style="stroke:var(--ink);stroke-width:'+(w+5)+'"/><path d="'+d+'" style="stroke:var(--bg);stroke-width:'+w+'"/>'}
+function Hn(x,y){return '<circle cx="'+x+'" cy="'+y+'" r="6" style="fill:var(--bg)"/>'}
+function Hd(x,y,m){
+var e=m=='x'?'<path d="M'+(x-9)+' '+(y-6)+'l6 6m0-6l-6 6M'+(x+3)+' '+(y-6)+'l6 6m0-6l-6 6"/>':'<circle cx="'+(x-6)+'" cy="'+(y-2)+'" r="2.2" style="fill:var(--ink);stroke:none"/><circle cx="'+(x+6)+'" cy="'+(y-2)+'" r="2.2" style="fill:var(--ink);stroke:none"/>';
+var M={o:'M'+(x-6)+' '+(y+6)+'q6 6 12 0',sad:'M'+(x-6)+' '+(y+11)+'q6-6 12 0',droop:'M'+(x-6)+' '+(y+7)+'l12 5',x:'M'+(x-5)+' '+(y+9)+'h10'};
+return '<circle cx="'+x+'" cy="'+y+'" r="17" style="fill:var(--bg)"/><path d="M'+(x-10)+' '+(y-14)+'q4-16 22-6q-9-1-11 8z" style="fill:var(--ink);stroke-width:2"/>'+e+'<path d="'+M[m]+'"/>'}
+function T(x,y,t){return '<text class="tx" x="'+x+'" y="'+y+'">'+t+'</text>'}
+var FL='<path d="M10 162H290" style="stroke:var(--line);stroke-width:2"/>';
+var LY=L('M52 142H150',16)+L('M148 143L238 146',9);
+function TC(x,y,t){return '<text class="tx" text-anchor="middle" x="'+x+'" y="'+y+'">'+t+'</text>'}
+function BODY(x){return L('M'+x+' 54V110',18)+L('M'+(x-6)+' 110L'+(x-14)+' 158',10)+L('M'+(x+6)+' 110L'+(x+14)+' 158',10)}
+var CHAIR='<path d="M124 112H198M198 112V162M124 112V162"/>';
+function SEAT(m){return FL+CHAIR+L('M160 54V108',18)+L('M160 108H196',11)+L('M196 108V158',10)+Hd(160,34,m)}
+function cprScene(a){return FL+LY+Hd(34,138,'x')+L('M150 112L140 152L185 154',10)+(a?'<g class="pump">':'<g>')+L('M150 110L116 62',17)+Hd(110,40,'o')+L('M118 70L104 134',8)+Hn(104,134)+'</g>'+T(190,45,a?'PUSH 5 CM':'HANDS HERE')+T(190,65,a?'110 / MIN':'MID CHEST')}
+function AWAY(o){var ob=o=='snake'?'<path d="M170 156q12-24 24 0t24 0t24 0"/><circle cx="246" cy="156" r="4" style="fill:var(--ink)"/>':'<path d="M222 160q-30-6-16-40q6 14 16 2q22 18 10 38z" style="fill:var(--bg)"/>';
+return FL+BODY(70)+Hd(70,34,'sad')+L('M70 66L100 84',8)+Hn(102,84)+ob+'<path d="M70 14H40M48 8L40 14L48 20"/>'+T(90,20,'MOVE AWAY')}
+function BAN(k,t){var I={cup:'<path d="M130 62H170V92Q170 104 158 104H142Q130 104 130 92Z"/>',ice:'<rect x="130" y="62" width="40" height="40" rx="6"/><path d="M140 72l10 8"/>',mouth:'<path d="M126 82Q150 62 174 82Q150 106 126 82Z"/>',blade:'<path d="M128 104L176 62L170 78L138 106Z"/>'};
+return I[k]+'<circle cx="150" cy="82" r="50" style="stroke:var(--red)"/><path d="M114 118L186 46" style="stroke:var(--red)"/>'+TC(150,164,t)}
+var S={
+cpr:FL+LY+Hd(34,138,'x')+L('M150 112L140 152L185 154',10)+'<g class="pump">'+L('M150 110L116 62',17)+Hd(110,40,'o')+L('M118 70L104 134',8)+Hn(104,134)+'</g>'+T(190,45,'PUSH 5 CM')+T(190,65,'110 / MIN'),
+heart:FL+'<path d="M124 112H198M198 112V162M124 112V162"/>'+L('M160 54V108',18)+L('M160 108H196',11)+L('M196 108V158',10)+Hd(160,34,'sad')+L('M160 68L140 86L162 82',8)+Hn(164,82)+L('M160 68L182 98',8)+Hn(183,100)+'<text class="hp" x="172" y="80" style="fill:var(--red);stroke:none;font-size:20px">&#9829;</text>'+T(215,45,'SIT')+T(215,65,'REST')+T(215,85,'CALL'),
+stroke:FL+L('M150 54V110',18)+L('M144 110L136 158',10)+L('M156 110L164 158',10)+Hd(150,34,'droop')+L('M150 66L112 40',8)+Hn(110,38)+'<g class="arm">'+L('M150 66L188 40',8)+Hn(190,38)+'</g>'+T(225,70,'FACE')+T(225,90,'ARMS')+T(225,110,'SPEECH')+T(225,130,'TIME'),
+bleed:FL+L('M30 156L100 108',12)+L('M100 108L170 46',10)+'<rect x="118" y="68" width="32" height="15" rx="3" transform="rotate(-42 134 76)" style="fill:var(--bg)"/>'+L('M250 20L146 74',8)+Hn(142,76)+'<circle class="drop" cx="112" cy="118" r="3.5" style="fill:var(--red);stroke:none"/><circle class="drop" cx="122" cy="124" r="3.5" style="fill:var(--red);stroke:none;animation-delay:.5s"/>'+T(185,120,'PRESS')+T(185,140,'RAISE HIGH'),
+faint:FL+L('M52 142H150',16)+Hd(34,138,'x')+'<g class="legs">'+L('M148 140H235',9)+L('M148 148H232',9)+'</g>'+T(150,50,'LEGS UP 30 CM')+T(150,72,'FRESH AIR'),
+mind:FL+'<rect x="56" y="4" width="68" height="30" rx="8"/><circle class="dot" cx="76" cy="19" r="3" style="fill:var(--ink)"/><circle class="dot" cx="90" cy="19" r="3" style="fill:var(--ink);animation-delay:.3s"/><circle class="dot" cx="104" cy="19" r="3" style="fill:var(--ink);animation-delay:.6s"/><path d="M92 34L100 48M70 134H232M80 134V162M222 134V162"/>'+L('M100 84V128',18)+L('M100 128H130',10)+L('M130 128V160',9)+Hd(100,64,'sad')+L('M190 84V128',18)+L('M190 128H160',10)+L('M160 128V160',9)+Hd(190,64,'o')+L('M190 98L104 96',8)+T(205,40,'LISTEN'),
+general:FL+L('M150 54V110',18)+L('M144 110L136 158',10)+L('M156 110L164 158',10)+Hd(150,34,'sad')+L('M150 66L132 100',8)+Hn(131,102)+L('M150 66L182 80L174 40',8)+'<rect x="168" y="18" width="10" height="22" rx="3" transform="rotate(10 173 29)" style="fill:var(--ink)"/>'+'<path class="dot" d="M186 22q8 6 0 14"/><path class="dot" d="M194 18q12 10 0 22" style="animation-delay:.4s"/>'+T(215,80,'CALL')+T(215,100,'STAY CALM'),
+choke:FL+L('M120 56V112',18)+L('M114 112L108 160',10)+L('M126 112L132 160',10)+Hd(120,36,'sad')+L('M120 68L104 78L117 54',7)+Hn(117,52)+L('M168 54V112',18)+L('M162 112L158 160',10)+L('M174 112L182 160',10)+Hd(168,34,'o')+'<g class="thr">'+L('M168 72L128 96',8)+Hn(126,98)+'</g>'+T(200,70,'BACK BLOWS')+T(200,92,'THRUSTS'),
+burn:FL+L('M20 140L100 112',11)+L('M100 112L158 104',10)+Hn(166,103)+'<circle cx="108" cy="110" r="5" style="fill:var(--red);stroke:none"/><path d="M130 22H168V38M140 22V12M132 12H148"/><circle class="wd" cx="167" cy="46" r="3" style="fill:var(--ink);stroke:none"/><circle class="wd" cx="169" cy="46" r="3" style="fill:var(--ink);stroke:none;animation-delay:.35s"/><circle class="wd" cx="167" cy="46" r="3" style="fill:var(--ink);stroke:none;animation-delay:.7s"/>'+T(190,130,'COOL WATER')+T(190,150,'20 MINUTES'),
+seizure:FL+'<rect x="10" y="146" width="48" height="14" rx="6"/><g class="shk">'+L('M52 142H150',16)+L('M148 143L238 146',9)+Hd(34,136,'x')+'</g><circle cx="240" cy="50" r="15"/><path d="M240 50V40M240 50L247 54"/>'+T(60,60,'CLEAR AREA')+T(60,80,'SOFT HEAD')+T(60,100,'NOTHING IN MOUTH'),
+kneel:cprScene(false),
+lieX:FL+LY+Hd(34,138,'x')+TC(200,70,'LIE FLAT')+TC(200,90,'ON THE BACK'),
+side:FL+L('M58 142H150',16)+Hd(40,134,'x')+L('M150 140L196 124L214 152',9)+L('M150 148H214',9)+L('M80 134L98 120L112 132',7)+TC(160,60,'ON THEIR SIDE')+TC(160,80,'HEAD TILTED BACK'),
+sit:SEAT('o')+L('M160 68L140 100',8)+Hn(139,102)+L('M160 68L182 98',8)+Hn(183,100)+T(215,50,'SIT')+T(215,70,'AND REST'),
+cough:FL+L('M150 110L118 66',17)+L('M144 112L138 160',10)+L('M156 112L162 160',10)+Hd(110,46,'o')+L('M128 82L110 66',7)+Hn(108,64)+'<path class="dot" d="M84 50q-8 6 0 12M74 44q-14 12 0 24"/>'+T(190,60,'KEEP')+T(190,80,'COUGHING'),
+backblow:FL+L('M130 112L104 74',17)+L('M124 114L118 160',10)+L('M136 114L142 160',10)+Hd(98,54,'sad')+BODY(210)+Hd(210,34,'o')+'<g class="thr">'+L('M210 70L146 86',8)+Hn(142,88)+'</g>'+TC(90,22,'5 BACK BLOWS'),
+collar:FL+BODY(150)+Hd(150,34,'sad')+L('M150 66L136 84L152 54',8)+Hn(152,52)+L('M150 66L170 100',8)+Hn(171,102)+T(200,70,'LOOSEN')+T(200,90,'CLOTHES'),
+aspirin:SEAT('sad')+L('M160 68L178 82L164 48',8)+Hn(164,46)+'<ellipse cx="172" cy="38" rx="7" ry="4" style="fill:var(--ink)"/>'+L('M160 68L140 100',8)+Hn(139,102)+T(215,60,'CHEW 1')+T(215,80,'ASPIRIN'),
+smile:'<circle cx="110" cy="90" r="46" style="fill:var(--bg)"/><circle cx="94" cy="78" r="3" style="fill:var(--ink);stroke:none"/><circle cx="126" cy="78" r="3" style="fill:var(--ink);stroke:none"/><path d="M84 106q12 12 26 4M110 110q14-6 24 8"/><path d="M80 52q10-22 34-8q-14-2-16 10z" style="fill:var(--ink);stroke-width:2"/>'+T(175,70,'SMILE')+T(175,92,'BOTH SIDES')+T(175,114,'EVEN?'),
+speak:Hd(110,70,'droop')+L('M110 90V150',18)+'<rect x="150" y="26" width="128" height="46" rx="10"/><path d="M152 60L128 76"/>'+T(160,54,'SAY A PHRASE')+T(170,110,'SLURRED?'),
+clock:'<circle cx="150" cy="82" r="46"/><path d="M150 82V52M150 82L172 94M150 38V44M150 120V126M104 82H110M190 82H196"/>'+TC(150,160,'NOTE THE TIME'),
+warm:FL+LY+Hd(34,138,'o')+'<path d="M64 124H196V152H64Z" style="fill:var(--bg)"/><path d="M84 124V152M104 124V152M124 124V152M144 124V152M164 124V152M184 124V152" style="stroke-width:1.5"/>'+TC(150,70,'KEEP WARM')+TC(150,90,'AND CALM'),
+ask:FL+BODY(90)+Hd(90,34,'o')+L('M90 68L120 80',8)+Hn(122,80)+BODY(210)+Hd(210,34,'sad')+L('M210 68L190 96',8)+Hn(189,98)+'<rect x="112" y="6" width="56" height="30" rx="8"/><text class="tx" x="134" y="30" style="font-size:24px">?</text>',
+inhaler:SEAT('sad')+L('M160 68L178 82L166 48',8)+Hn(166,46)+'<path d="M172 34V50H186" style="stroke-width:5"/><circle class="dot" cx="196" cy="48" r="2" style="fill:var(--ink);stroke:none"/><circle class="dot" cx="204" cy="44" r="2" style="fill:var(--ink);stroke:none;animation-delay:.4s"/>'+L('M160 68L140 100',8)+Hn(139,102)+T(205,80,'USE THEIR')+T(205,100,'INHALER'),
+pen:SEAT('sad')+L('M160 68L182 96',8)+Hn(184,98)+'<path d="M172 106H206" style="stroke-width:6"/>'+L('M160 68L140 100',8)+Hn(139,102)+T(190,40,'ADRENALINE')+T(190,60,'OUTER THIGH'),
+still:SEAT('sad')+'<path d="M132 82L186 82L160 114Z" style="fill:var(--bg)"/>'+L('M160 68L142 92L176 94',8)+Hn(178,94)+L('M160 68L184 100',8)+Hn(185,102)+T(205,40,'KEEP IT')+T(205,60,'STILL'),
+neckhold:FL+LY+Hd(34,138,'x')+Hn(10,138)+Hn(58,140)+TC(180,60,'DO NOT MOVE')+TC(180,80,'HEAD OR NECK'),
+awayflame:AWAY('flame'),
+awaysnake:AWAY('snake'),
+ring:L('M20 150L90 120',12)+Hn(100,116)+'<circle cx="94" cy="118" r="9"/>'+T(130,100,'REMOVE')+T(130,120,'RINGS & WATCH'),
+cover:L('M20 150L100 118',12)+L('M100 118L150 108',10)+Hn(158,107)+'<rect x="70" y="100" width="60" height="26" rx="4" transform="rotate(-18 100 113)" style="fill:var(--bg)"/>'+T(185,100,'COVER')+T(185,120,'LOOSELY'),
+thermo:FL+BODY(150)+Hd(150,34,'sad')+'<path d="M160 40H184" style="stroke-width:5"/><path class="dot" d="M120 20q-6 8 0 16M130 14q-6 8 0 16"/>'+L('M150 66L134 100',8)+Hn(133,102)+L('M150 66L170 100',8)+Hn(171,102)+T(195,70,'CHECK')+T(195,90,'TEMPERATURE'),
+ambulance:FL+'<path d="M40 140H230V104H190L168 80H40Z"/><circle cx="82" cy="142" r="12" style="fill:var(--bg)"/><circle cx="190" cy="142" r="12" style="fill:var(--bg)"/><path d="M96 94v24M84 106h24" style="stroke:var(--red);stroke-width:6"/><path class="dot" d="M120 70L128 62M136 66V56M152 70L144 62"/>'+T(60,40,'AMBULANCE / CLINIC'),
+bottle:'<rect x="130" y="60" width="40" height="80" rx="8"/><path d="M142 60V46H158V60"/><circle cx="150" cy="100" r="14"/><path d="M144 94l12 12M156 94l-12 12"/>'+TC(150,164,'KEEP THE CONTAINER'),
+bancup:BAN('cup','NO FOOD OR DRINK'),
+banice:BAN('ice','NO ICE OR BUTTER'),
+banmouth:BAN('mouth','NOTHING IN MOUTH'),
+banblade:BAN('blade','DO NOT CUT THE BITE'),
+clear:FL+LY+Hd(34,138,'x')+'<rect x="90" y="84" width="24" height="24"/><path d="M102 80V60M96 66L102 58L108 66"/><path d="M170 110L190 84L196 112Z"/><path d="M196 78L214 62M204 62H214V72"/>'+TC(150,30,'CLEAR THE AREA'),
+raise:L('M30 156L90 116',12)+L('M90 116L150 56',10)+Hn(156,50)+'<text x="40" y="130" style="fill:var(--red);stroke:none;font-size:22px">&#9829;</text><path d="M205 130V70M197 80L205 70L213 80"/>'+T(220,95,'ABOVE')+T(220,115,'HEART')
+};
+var STEPFIG={
+cpr:['general','lieX','kneel','cpr','cpr','cpr'],
+heart:['general','sit','collar','aspirin','mind','lieX'],
+stroke:['general','smile','stroke','speak','clock','sit'],
+bleed:['general','bleed','bleed','raise','bleed','warm'],
+faint:['lieX','faint','collar','clock','sit'],
+mind:['mind','mind','ask','general','mind','general'],
+choke:['general','cough','general','backblow','choke','choke','lieX'],
+burn:['awayflame','burn','ring','banice','cover','general'],
+seizure:['clock','clear','seizure','banmouth','side','general','mind'],
+call:['general','general','general','general','general','ambulance','mind'],
+asthma:['sit','inhaler','collar','general','lieX'],
+allergy:['general','pen','faint','bancup','lieX'],
+snake:['awaysnake','general','still','ring','banblade'],
+fracture:['neckhold','still','bleed','still','warm'],
+poison:['general','bancup','sit','bottle','lieX'],
+fever:['general','thermo','ambulance','ambulance','mind'],
+other:['general','sit','bancup','ambulance','general']
+};
+var POSEGLOSS='general=phoning for help, lieX=lying flat on back, side=recovery position on side, sit=sitting and resting, cough=coughing bent forward, backblow=back blows, choke=abdominal thrusts, cpr=chest compressions, kneel=hand position for CPR, bleed=pressing a wound, raise=raising a limb above heart, faint=lying with legs raised, collar=loosening clothes, aspirin=chewing aspirin, smile=face check, stroke=arm raise check, speak=speech check, clock=noting the time, warm=lying covered warm, ask=asking a person a question, mind=sitting with and comforting, inhaler=using an inhaler, pen=adrenaline pen on thigh, still=keeping a limb still in a sling, neckhold=holding head and neck still, awayflame=moving away from fire, awaysnake=moving away from a snake, ring=removing rings, cover=covering a burn, burn=cooling under running water, thermo=checking temperature, ambulance=going to hospital or clinic, bottle=keeping a container, bancup=no food or drink, banice=no ice or butter, banmouth=nothing in the mouth, banblade=do not cut, clear=clearing the area, seizure=cushioning the head';
+var FLOWS=[
+{id:'cpr',name:'CPR',sub:'Not breathing',tool:'metro',steps:[
+"This person needs CPR. Call 112 now, or ask someone nearby to call.",
+"Lay the person flat on their back, on a hard surface.",
+"Kneel beside their chest. Put the heel of one hand in the center of the chest. Put your other hand on top.",
+"Push hard and fast. Push down about five centimeters. Let the chest come back up each time. Tap start beat and push with the rhythm.",
+"Keep going. Do not stop. If you are trained, give two breaths after every thirty pushes. If not, keep pushing.",
+"Keep going until help arrives, or the person starts breathing."]},
+{id:'heart',name:'HEART ATTACK',sub:'Chest pain',steps:[
+"This may be a heart attack. Call 112 now.",
+"Help the person sit down and rest.",
+"Loosen any tight clothing.",
+"If they are not allergic to aspirin, have them chew one adult aspirin.",
+"Stay with them and keep them calm.",
+"If they stop responding and stop breathing, go back and start CPR."]},
+{id:'stroke',name:'STROKE',sub:'Face, arm, speech',steps:[
+"This may be a stroke. Call 112 now.",
+"Face. Ask the person to smile. Does one side of the face droop?",
+"Arms. Ask them to raise both arms. Does one arm drop?",
+"Speech. Ask them to say a simple sentence. Is it slurred or confused?",
+"Note the time the symptoms began. Tell the paramedics.",
+"Keep the person sitting or lying down, calm and still. Do not give food, drink, or medicine."]},
+{id:'bleed',name:'BLEEDING',sub:'Cuts and wounds',tool:'timer',steps:[
+"Stay calm. Call 112 if the bleeding is heavy.",
+"Press firmly on the wound with a clean cloth.",
+"Do not lift the cloth to check. If it soaks through, add more cloth on top.",
+"If it is an arm or leg, raise it above the heart.",
+"Keep pressing for ten minutes. Tap start timer and I will tell you when time is up.",
+"Once it slows, bandage firmly, but not so tight it cuts off blood flow. Keep the person warm and lying down."]},
+{id:'faint',name:'FAINTING',sub:'Passed out',steps:[
+"Lay the person flat on their back.",
+"Raise their legs about thirty centimeters.",
+"Loosen tight clothing. Give them fresh air.",
+"They should wake within a minute. If not, call 112.",
+"When they wake, let them rest. Give water only when fully alert. Help them sit up slowly."]},
+{id:'mind',name:'FEELING LOW',sub:'Depression, crisis',steps:[
+"Stay calm and stay with them.",
+"Listen without judging. Let them talk.",
+"Ask clearly: are you thinking of hurting yourself?",
+"If yes, do not leave them alone. Remove anything they could use to hurt themselves, if it is safe. Call 112 or a crisis line now.",
+"If no, encourage them to see a doctor or counselor. Offer to go with them.",
+"Check in with them again tomorrow."]},
+{id:'choke',name:'CHOKING',sub:'Cannot cough or speak',steps:[
+"This guide is for adults and children over one year. For a baby, call 112 now.",
+"If they can cough, tell them to keep coughing. Do not hit their back yet.",
+"If they cannot cough, speak, or breathe, call 112 now, or shout for someone to call.",
+"Stand behind them. Lean them forward. Give five firm blows between the shoulder blades with the heel of your hand.",
+"Still choking? Make a fist above the belly button. Pull hard inward and upward. Give five thrusts.",
+"Keep going, five back blows, then five thrusts, until it comes out or help arrives.",
+"If they pass out, lay them down and start CPR."]},
+{id:'burn',name:'BURNS',sub:'Hot water, fire, oil',steps:[
+"Move away from the heat. Make sure you are both safe.",
+"Cool the burn under cool running water for at least twenty minutes.",
+"Take off rings, watches, and tight clothing near the burn before it swells. Do not pull off anything stuck to the skin.",
+"Do not use ice, butter, oil, or toothpaste.",
+"Cover loosely with clean cling film or a clean, non-fluffy cloth. Do not burst blisters.",
+"Call 112 if the burn is large, deep, on the face, hands, or private parts, or caused by chemicals or electricity."]},
+{id:'seizure',name:'SEIZURE',sub:'Shaking, fits',steps:[
+"Stay calm. Note the time the seizure started.",
+"Clear the area. Move hard or sharp things away.",
+"Cushion their head with something soft. Do not hold them down.",
+"Do not put anything in their mouth.",
+"When the shaking stops, roll them onto their side. Tilt the head back slightly to help them breathe.",
+"Call 112 if it lasts more than five minutes, they do not wake up, they are hurt or pregnant, or it happens again.",
+"Stay with them until fully awake. Speak gently."]},
+{id:'call',fig:'general',name:'CALL SCRIPT',sub:'What to tell the operator',steps:[
+"Call 112. Stay calm. Speak slowly and clearly.",
+"Say where you are. Give the street, landmark, or area. This is the most important part.",
+"Say what happened. For example: my father collapsed and is not breathing.",
+"Say how many people are hurt, their age, and whether they are awake and breathing.",
+"Answer the operator's questions. Do not hang up until they tell you to.",
+"If you can, send someone outside to guide the ambulance.",
+"Stay with the person and follow the operator's instructions."]},
+{id:'asthma',fig:'heart',name:'ASTHMA',sub:'Wheezing, hard to breathe',steps:[
+"Help the person sit upright. Stay calm and speak slowly.",
+"Help them take their own reliever inhaler, as prescribed.",
+"Loosen tight clothing and open a window for fresh air.",
+"Call 112 if there is no improvement in a few minutes, they cannot speak, or their lips turn blue.",
+"If they stop breathing, start CPR."]},
+{id:'allergy',fig:'general',name:'ALLERGY',sub:'Swelling, hives, stings',steps:[
+"Call 112 now if there is swelling of the face or throat, trouble breathing, or they feel faint.",
+"If they have an adrenaline pen, help them use it right away on the outer thigh.",
+"Lay them flat with legs raised. If breathing is hard, let them sit up.",
+"Stay with them. Do not give food or drink.",
+"Be ready to start CPR if they stop breathing."]},
+{id:'snake',fig:'general',name:'SNAKE BITE',sub:'Bites and stings',steps:[
+"Move away from the snake. Do not try to catch or kill it.",
+"Call 112 or get to a hospital now. Antivenom is the treatment.",
+"Keep the person calm and still. Keep the bitten limb still, at about heart level.",
+"Remove rings and tight items near the bite before it swells.",
+"Do not cut the bite, suck it, apply ice, tie a tight band, or use herbs."]},
+{id:'fracture',fig:'general',name:'BROKEN BONE',sub:'Falls, sprains, head injury',steps:[
+"If you suspect a neck, back, or head injury, do not move the person. Call 112.",
+"Keep the injured part still. Support it in the position you found it.",
+"If there is bleeding, press gently around the wound with a clean cloth.",
+"Do not try to straighten the bone or push it back in.",
+"Get medical help. Keep the person warm and calm."]},
+{id:'poison',fig:'general',name:'POISONING',sub:'Swallowed something harmful',steps:[
+"Call 112 now. Find out what was swallowed, how much, and when.",
+"Do not make the person vomit. Do not give milk, food, or drinks unless told to.",
+"If they are awake, keep them calm and sitting. If drowsy, lay them on their side.",
+"Keep the container or a sample to show the doctor.",
+"If they stop breathing, start CPR."]},
+{id:'fever',fig:'general',name:'FEVER',sub:'Malaria, flu, pain, vomiting',steps:[
+"Call 112 if they are confused, have a stiff neck, a seizure, trouble breathing, or are very drowsy.",
+"Remove extra clothing. Keep the room cool and give plenty of fluids.",
+"In Nigeria, fever can be malaria. Get a malaria test at a clinic today.",
+"A baby under three months with any fever must go to hospital at once.",
+"Ask a pharmacist about fever medicine. Do not give aspirin to children."]},
+{id:'other',fig:'general',name:'NOT SURE',sub:'Any other symptom',steps:[
+"If the person is not breathing, unconscious, has severe chest pain, heavy bleeding, or cannot speak, call 112 now.",
+"Stay with them. Keep them calm, and let them rest in a comfortable position.",
+"Do not give food, drink, or medicine unless a doctor has said so.",
+"If it is not an emergency, see a doctor or clinic today. Tell them when it started and what changed.",
+"If it gets worse, or you are worried, call 112 or go to the nearest hospital."]}
+];
+var TR={
+yo:{
+cpr:["Ẹni yìí nílò CPR. Pe 112 nísinsìnyí, tàbí ké sí ẹnìkan nítòsí láti pè é.","Gbé ẹni náà sùn lórí ẹ̀yìn rẹ̀, lórí ilẹ̀ líle.","Kúnlẹ̀ sí ẹ̀gbẹ́ àyà rẹ̀. Fi àtẹ́lẹwọ́ kan sí àárín àyà. Fi ọwọ́ kejì lé e lórí.","Tẹ̀ ẹ́ le, kí o sì tẹ̀ ẹ́ kíákíá, tó sẹ̀ǹtímítà márùn-ún jìn. Jẹ́ kí àyà gbéra sókè lẹ́ẹ̀kan sí i. Tẹ START BEAT kí o sì tẹ̀ bí ìlù ṣe ń lọ.","Máa tẹ̀ síwájú. Má dúró. Tí o bá mọ̀ ọ́n, fún un ní èémí méjì lẹ́yìn gbogbo ìtẹ̀ ọgbọ̀n. Tí kò bá rí bẹ́ẹ̀, máa tẹ̀ nìkan.","Máa ṣe é títí ìrànlọ́wọ́ yóò fi dé, tàbí ẹni náà yóò fi bẹ̀rẹ̀ sí í mí."],
+heart:["Èyí lè jẹ́ àrùn ọkàn. Pe 112 nísinsìnyí.","Ran ẹni náà lọ́wọ́ láti jókòó kí ó sì sinmi.","Tú aṣọ tó há mọ́ ọn sílẹ̀.","Tí aspirin kò bá ṣe é ní ibi, jẹ́ kí ó jẹ aspirin àgbàlagbà kan.","Dúró tì í kí o sì mú un balẹ̀.","Tí kò bá dá ọ̀rọ̀ mọ́, tí kò sì mí mọ́, padà sẹ́yìn kí o bẹ̀rẹ̀ CPR."],
+stroke:["Èyí lè jẹ́ àrùn ẹ̀gbà (stroke). Pe 112 nísinsìnyí.","Ojú. Sọ fún un kí ó rẹ́rìn-ín. Ṣé ẹ̀gbẹ́ kan ojú rẹ̀ ń sàlẹ̀?","Ọwọ́. Sọ fún un kí ó gbé ọwọ́ méjèèjì sókè. Ṣé ọwọ́ kan ń já bọ́lẹ̀?","Ọ̀rọ̀. Sọ fún un kí ó sọ gbólóhùn kékeré kan. Ṣé ọ̀rọ̀ rẹ̀ dàrú tàbí kò yé ọ?","Kọ àkókò tí àmì bẹ̀rẹ̀. Sọ fún àwọn òṣìṣẹ́ ìrànlọ́wọ́.","Jẹ́ kí ó jókòó tàbí sùn ní ìbàlẹ̀. Má fún un ní oúnjẹ, omi tàbí oògùn."],
+bleed:["Fara balẹ̀. Pe 112 tí ẹ̀jẹ̀ bá pọ̀.","Tẹ ọgbẹ́ náà le pẹ̀lú aṣọ mímọ́.","Má gbé aṣọ náà láti wò ó. Tí ẹ̀jẹ̀ bá wọlé, fi aṣọ mìíràn lé e lórí.","Tí ó bá jẹ́ apá tàbí ẹsẹ̀, gbé e sókè ju ọkàn lọ.","Máa tẹ̀ ẹ́ fún ìṣẹ́jú mẹ́wàá. Tẹ START TIMER, èmi yóò sọ nígbà tí àkókò bá tán.","Nígbà tí ó bá dínkù, dì í, ṣùgbọ́n má ṣe le jù. Jẹ́ kí ẹni náà móoru kí ó sì sùn."],
+faint:["Gbé ẹni náà sùn lórí ẹ̀yìn rẹ̀.","Gbé ẹsẹ̀ rẹ̀ sókè tó sẹ̀ǹtímítà ọgbọ̀n.","Tú aṣọ tó há. Jẹ́ kí afẹ́fẹ́ tútù wọlé.","Ó yẹ kí ó jí láàárín ìṣẹ́jú kan. Tí kò bá jí, pe 112.","Nígbà tí ó bá jí, jẹ́ kí ó sinmi. Fún un ní omi nígbà tí ó bá jí dáadáa. Ran án lọ́wọ́ láti jókòó díẹ̀díẹ̀."],
+mind:["Fara balẹ̀, kí o sì dúró tì í.","Fetí sílẹ̀ láì dá a lẹ́bi. Jẹ́ kí ó sọ̀rọ̀.","Béèrè ní gbangba: ṣé ò ń ronú láti pa ara rẹ lára?","Tí ó bá sọ bẹ́ẹ̀, má fi sílẹ̀ nìkan. Mú ohunkóhun tó lè fi pa ara rẹ̀ lára kúrò, tí ó bá dájú. Pe 112 tàbí ìlà ìrànlọ́wọ́ nísinsìnyí.","Tí kò bá sọ bẹ́ẹ̀, gba á níyànjú láti rí dókítà tàbí olùgbaninímọ̀ràn. Fi ara rẹ lọ́wọ́ láti bá a lọ.","Padà wo ọ̀rọ̀ rẹ̀ lọ́la."],
+choke:["Ìtọ́nisọ́nà yìí wà fún àgbàlagbà àti ọmọdé tó ju ọdún kan lọ. Fún ọmọ ọwọ́, pe 112 nísinsìnyí.","Tí ó bá lè wúkọ́, sọ fún un kí ó máa wúkọ́ lọ. Má lù ú ní ẹ̀yìn síbẹ̀.","Tí kò bá lè wúkọ́, sọ̀rọ̀ tàbí mí, pe 112 nísinsìnyí, tàbí kígbe fún ẹni tí yóò pè é.","Dúró lẹ́yìn rẹ̀. Tẹ̀ ẹ́ síwájú. Fi ìdí ọwọ́ rẹ lù ú ní ẹ̀yìn, láàárín èjìká, ní ẹ̀ẹ̀marùn-ún.","Tí kò bá tíì jáde, há ọwọ́ rẹ mọ́ra sókè ìdodo. Fà á wọlé àti sókè le, ní ẹ̀ẹ̀marùn-ún.","Máa ṣe é lọ, ẹ̀ẹ̀marùn-ún ẹ̀yìn, ẹ̀ẹ̀marùn-ún ikùn, títí yóò fi jáde tàbí ìrànlọ́wọ́ yóò fi dé.","Tí ó bá dákú, gbé e sùn kí o sì bẹ̀rẹ̀ CPR."],
+burn:["Kúrò níbi ooru. Rí i dájú pé ẹ̀yin méjèèjì wà ní àìléwu.","Da omi tútù tó ń ṣàn sórí ìjóná náà fún ó kéré tán ìṣẹ́jú ogún.","Bọ́ òrùka, aago àti aṣọ tó há nítòsí ibẹ̀ kí ó tó wú. Má fa ohunkóhun tó ti lẹ̀ mọ́ awọ ara.","Má lo yìnyín, bọ́tà, òróró tàbí ọṣẹ eyín.","Fi aṣọ mímọ́ bò ó díẹ̀. Má fọ́ àwọn ìṣú omi tó yọ.","Pe 112 tí ìjóná bá tóbi, jìn, wà ní ojú, ọwọ́, tàbí ẹ̀yà ìkọ̀kọ̀, tàbí kẹ́míkà tàbí iná mànàmáná ló fà á."],
+seizure:["Fara balẹ̀. Kọ àkókò tí ó bẹ̀rẹ̀.","Mú àwọn ohun líle tàbí mímú kúrò ní àyíká rẹ̀.","Fi ohun rírọ̀ gbé orí rẹ̀. Má dì í mú.","Má fi ohunkóhun sí ẹnu rẹ̀.","Nígbà tí ara rẹ̀ bá dákẹ́ gbọ̀n, yí i sí ẹ̀gbẹ́ rẹ̀. Gbé orí rẹ̀ sẹ́yìn díẹ̀ kí ó lè mí.","Pe 112 tí ó bá ju ìṣẹ́jú márùn-ún lọ, tí kò bá jí, tí ó bá farapa tàbí lóyún, tàbí tí ó tún padà.","Dúró tì í títí yóò fi jí dáadáa. Bá a sọ̀rọ̀ pẹ̀lú ìrẹ̀lẹ̀."],
+call:["Pe 112. Fara balẹ̀. Sọ̀rọ̀ díẹ̀díẹ̀ kí ó ṣe kedere.","Sọ ibi tí o wà. Sọ òpópónà, àmì ibi, tàbí agbègbè. Èyí ni ohun tó ṣe pàtàkì jù.","Sọ ohun tó ṣẹlẹ̀. Fún àpẹẹrẹ: bàbá mi ṣubú, kò sì mí.","Sọ iye àwọn tó farapa, ọjọ́ orí wọn, àti bóyá wọ́n jí, wọ́n sì ń mí.","Dáhùn àwọn ìbéèrè ẹni tó gbà ìpè. Má gbé fóònù kúrò títí yóò fi sọ fún ọ.","Tí o bá lè, rán ẹnìkan síta láti tọ́ ọkọ̀ aláìsàn sọ́nà.","Dúró pẹ̀lú ẹni náà kí o sì tẹ̀lé ìtọ́ni ẹni tó gbà ìpè."],
+other:["Tí ẹni náà kò bá mí, tí ó dákú, tí àyà rẹ̀ ń dùn gidi, tí ẹ̀jẹ̀ pọ̀, tàbí tí kò lè sọ̀rọ̀, pe 112 nísinsìnyí.","Dúró tì í. Mú un balẹ̀, kí o sì jẹ́ kí ó sinmi ní ipò tí ó rọgbọ.","Má fún un ní oúnjẹ, omi tàbí oògùn àyàfi tí dókítà bá sọ.","Tí kì í bá ṣe pàjáwìrì, lọ rí dókítà tàbí ilé ìwòsàn lónìí. Sọ ìgbà tí ó bẹ̀rẹ̀ àti ohun tó yípadà.","Tí ó bá burú sí i, tàbí tí ọkàn rẹ kò balẹ̀, pe 112 tàbí lọ sí ilé ìwòsàn tó sún mọ́ jù."],
+ex:["Ìṣẹ́jú márùn-ún ló kù. Máa tẹ̀ síwájú.","Ìṣẹ́jú mẹ́wàá ti tán. Wo ọgbẹ́ náà jẹ́jẹ́. Tí ẹ̀jẹ̀ bá ṣì ń jáde, máa tẹ̀ ẹ́ kí o sì dúró de ìrànlọ́wọ́."]
+},
+ig:{
+cpr:["Onye a chọrọ CPR. Kpọọ 112 ugbu a, ma ọ bụ gwa onye nọ nso ka ọ kpọọ.","Dọba onye ahụ n'azụ ya n'elu ala siri ike.","Kwụ ụkwụ n'akụkụ obi ya. Tinye ọkpụkpụ aka gị n'etiti obi. Tinye aka nke ọzọ n'elu ya.","Pịa ike ma ngwa ngwa, ihe dị ka sentimita ise n'ime. Hapụ obi ka ọ bilie. Pịa START BEAT wee pịa dịka ụda ahụ.","Gaa n'ihu. Akwụsịla. Ọ bụrụ na ị mụtara, nye ume abụọ mgbe pịa iri atọ ọ bụla. Ọ bụghị ya, na-apị naanị.","Gaa n'ihu ruo mgbe enyemaka ga-abịa, ma ọ bụ onye ahụ amalite iku ume."],
+heart:["Nke a nwere ike ịbụ ọrịa obi. Kpọọ 112 ugbu a.","Nyere onye ahụ aka ka ọ nọdụ ala zuru ike.","Tọpụ uwe ọ bụla na-agbado ya.","Ọ bụrụ na aspirin adịghị emerụ ya, mee ka ọ taa aspirin otu nke ndị okenye.","Nọnyere ya ma mee ka obi dị ya jụụ.","Ọ bụrụ na ọ kwụsị ịza ma kwụsị iku ume, laghachi malite CPR."],
+stroke:["Nke a nwere ike ịbụ strok. Kpọọ 112 ugbu a.","Ihu. Gwa ya ka ọ chịa ọchị. Ọ̀ bụ na otu akụkụ ihu ya na-ada?","Aka. Gwa ya ka ọ welie aka abụọ. Ọ̀ bụ na otu aka na-ada?","Okwu. Gwa ya ka ọ kwuo obere okwu. Ọ̀ bụ na ọ na-ekwu okwu na-adịghị mma?","Dee oge mgbaàmà malitere. Gwa ndị enyemaka.","Mee ka ọ nọdụ ma ọ bụ dọba, jụụ jụụ. Enyela ya nri, mmiri ma ọ bụ ọgwụ."],
+bleed:["Nwee udo. Kpọọ 112 ma ọ bụrụ na ọbara na-eru nke ukwuu.","Pịa ọnya ahụ ike were akwa dị ọcha.","Ewelila akwa ahụ lelee. Ọ bụrụ na ọbara gafere, tinye akwa ọzọ n'elu.","Ọ bụrụ aka ma ọ bụ ụkwụ, welie ya karịa obi.","Gaa n'ihu na-apị ruo nkeji iri. Pịa START TIMER, aga m agwa gị mgbe oge gwụrụ.","Mgbe ọ belatara, kee ya ọnya nke ọma, ọ bụghị nke siri ike gabiga ókè. Mee ka onye ahụ ghara ịhụ oyi ma dọba."],
+faint:["Dọba onye ahụ n'azụ ya.","Welie ụkwụ ya elu ihe dị ka sentimita iri atọ.","Tọpụ uwe na-agbado. Hapụ ikuku dị mma abata.","Ọ kwesịrị ịmaliteghachi n'ime otu nkeji. Ọ bụrụ na ọ naghị eteta, kpọọ 112.","Mgbe ọ tetara, mee ka ọ zuru ike. Nye mmiri naanị mgbe ọ tetara nke ọma. Nyere ya aka ịnọdụ nwayọọ."],
+mind:["Nwee udo, nọnyere ya.","Gee ntị n'enweghị ikpe ya ikpe. Hapụ ya ka ọ kwuo.","Jụọ ya ọkpọtụrụ: ì na-eche ime onwe gị ihe ọjọọ?","Ọ bụrụ na ọ sị ee, ahapụla ya naanị ya. Wepụ ihe ọ bụla ọ ga-eji mebie onwe ya, ọ bụrụ na ọ dị mma. Kpọọ 112 ma ọ bụ ahịrị enyemaka ugbu a.","Ọ bụrụ na ọ sị mba, gbaa ya ume ka ọ hụ dọkịta ma ọ bụ onye ndụmọdụ. Nye ya aka ịga ya.","Lelee ya ọzọ echi."],
+choke:["Ntuziaka a bụ maka ndị okenye na ụmụaka karịrị otu afọ. Maka nwa ọhụrụ, kpọọ 112 ugbu a.","Ọ bụrụ na ọ nwere ike ihe ụkwara, gwa ya ka ọ na-akwa ụkwara. Etichala ya azụ ma.","Ọ bụrụ na ọ pụghị ịkwa ụkwara, ikwu okwu ma ọ bụ iku ume, kpọọ 112 ugbu a, ma ọ bụ tie mkpu ka onye kpọọ.","Kwụ n'azụ ya. Hulata ya n'ihu. Were ọkpụkpụ aka gị tie ya ise ike n'etiti ubu abụọ.","Ọ bụrụ na ọ nọgidere na-agbu, kpọkọta aka gị n'elu ọnụ ọgụgụ afọ. Dọtụ ya ike n'ime na elu, ise.","Gaa n'ihu, ise n'azụ, ise n'afọ, ruo mgbe ọ pụta ma ọ bụ enyemaka abịa.","Ọ bụrụ na ọ daa n'ala na-amaghị onwe ya, dọba ya malite CPR."],
+burn:["Pụọ n'ebe ọkụ dị. Jide n'aka na unu abụọ nọ n'enweghị ihe egwu.","Gbanye mmiri oyi na-asọ n'elu ọkụ ahụ opekata mpe nkeji iri abụọ.","Wepụ mgbanaka, elekere na uwe na-agbado n'akụkụ ya tupu ọ fụọ. Adọkpụla ihe rapaara akpụkpọ ahụ.","Etinyela ice, bọta, mmanụ ma ọ bụ ọgwụ eze.","Were akwa dị ọcha kpuchie ya nwayọọ. Agbawala ọnya mmiri.","Kpọọ 112 ma ọ bụrụ na ọkụ ahụ buru ibu, dị omimi, nọ n'ihu, aka, ma ọ bụ akụkụ nzuzo, ma ọ bụ kemịkalụ ma ọ bụ ọkụ eletrik kpatara ya."],
+seizure:["Nwee udo. Dee oge ọ malitere.","Wepụ ihe siri ike ma ọ bụ nke dị nkọ n'ebe ọ nọ.","Were ihe dị nro kwado isi ya. Edebela ya aka.","Etinyela ihe ọ bụla n'ọnụ ya.","Mgbe ịma jijiji kwụsịrị, tụgharịa ya n'akụkụ ya. Tụgharịa isi ya nwayọọ ka o nwee ike iku ume.","Kpọọ 112 ma ọ bụrụ na ọ gafere nkeji ise, ọ naghị eteta, ọ merụrụ ahụ ma ọ bụ ọ dị ime, ma ọ bụ ọ laghachiri.","Nọnyere ya ruo mgbe ọ tetara nke ọma. Gwa ya okwu nwayọọ."],
+call:["Kpọọ 112. Nwee udo. Kwuo nwayọọ ma doo anya.","Gwa ebe ị nọ. Kwuo okporo ụzọ, ihe ngosi, ma ọ bụ mpaghara. Nke a bụ akụkụ kacha mkpa.","Kọwaa ihe mere. Dịka ọmụmaatụ: nna m dara ma ọ naghị eku ume.","Kwuo ọnụ ọgụgụ ndị merụrụ ahụ, afọ ha, na ma ha na-eteta ma na-eku ume.","Zaa ajụjụ onye natara oku. Ahapụla ekwentị ruo mgbe ọ gwara gị.","Ọ bụrụ na ị nwere ike, zipụ onye n'èzí ka ọ duru ụgbọ ọgwụ.","Nọnyere onye ahụ ma soro ntuziaka onye natara oku."],
+other:["Ọ bụrụ na onye ahụ anaghị eku ume, daa n'ala, nwere ihe mgbu obi siri ike, ọbara na-eru ukwuu, ma ọ bụ enweghị ike ikwu okwu, kpọọ 112 ugbu a.","Nọnyere ya. Mee ka obi dị ya jụụ, ka ọ zuru ike n'ọnọdụ dị mma.","Enyela ya nri, mmiri ma ọ bụ ọgwụ belụsọ dọkịta kwuru.","Ọ bụrụ na ọ bụghị ihe mberede, jee hụ dọkịta ma ọ bụ ụlọ ọgwụ taa. Gwa ha mgbe ọ malitere na ihe gbanwere.","Ọ bụrụ na ọ na-akawanye njọ, ma ọ bụ ị na-echegbu onwe gị, kpọọ 112 ma ọ bụ gaa ụlọ ọgwụ kacha nso."],
+ex:["Fọdụrụ nkeji ise. Gaa n'ihu na-apị.","Nkeji iri agwụla. Lelee ọnya ahụ nwayọọ. Ọ bụrụ na ọbara ka na-apụ, gaa n'ihu na-apị ma chere enyemaka."]
+}};
+var KW={
+cpr:'not breathing,no pulse,no heartbeat,unconscious,unresponsive,collapsed,collapse,stopped breathing,cardiac arrest,drowning,drowned,cpr,not waking,blue lips,lifeless,gasping,not moving',
+heart:'chest pain,chest pressure,tight chest,pain in chest,heart,left arm,arm pain,jaw pain,neck pain,sweating,cold sweat,heart attack,palpitation,palpitations,racing heart,irregular heartbeat,angina,indigestion,crushing',
+stroke:'stroke,slurred,speech,cant speak,trouble speaking,face droop,drooping,numb,numbness,weak arm,weak leg,weakness,confused,confusion,sudden headache,blurred,vision,double vision,cannot see,loss of balance,paralysis,paralysed,one side',
+bleed:'bleeding,blood,cut,wound,gash,nosebleed,nose bleed,deep cut,stab,stabbed,gunshot,shot,scrape,graze,laceration,vomiting blood,coughing blood,blood in stool,blood in urine,heavy bleeding,knife,injury,accident,crash',
+faint:'faint,fainted,fainting,dizzy,dizziness,lightheaded,passed out,black out,blackout,weak,spinning,vertigo,low sugar,hunger,heat exhaustion',
+mind:'depressed,depression,sad,hopeless,suicidal,suicide,anxious,anxiety,panic,panic attack,lonely,want to die,hurt myself,self harm,stressed,overwhelmed,worthless,low,cant sleep,crying,grief,abuse,kill myself,end my life,worried,afraid,scared,mental',
+choke:'choking,choke,cannot breathe,cant breathe,food stuck,stuck in throat,gagging,coughing,bone in throat,fish bone,something in throat',
+burn:'burn,burned,burnt,scald,scalded,hot water,boiling,fire,flame,hot oil,sunburn,blister,electric shock,electrocuted,chemical burn,acid',
+seizure:'seizure,fit,fits,convulsion,convulsions,epilepsy,shaking,jerking,twitching,foaming,foaming mouth,stiff body,eyes rolling',
+call:'call,operator,ambulance,what to say,emergency call,phone,112,911,999,how to call',
+asthma:'asthma,wheezing,wheeze,difficulty breathing,hard to breathe,short of breath,shortness of breath,breathless,out of breath,inhaler,tight chest',
+allergy:'allergy,allergic,swelling,swollen face,swollen lips,swollen tongue,hives,rash,itchy,itching,anaphylaxis,bee sting,wasp sting,sting,peanut,reaction',
+snake:'snake,snakebite,snake bite,bitten,venom,viper,cobra,python,dog bite,scorpion,spider,animal bite,bite',
+fracture:'broken,fracture,broke,bone,sprain,twisted ankle,dislocated,cannot walk,swollen ankle,fall,fell,leg injury,arm injury,back injury,neck injury,head injury,hit head,concussion',
+poison:'poison,poisoned,overdose,drank,kerosene,chemical,pesticide,bleach,drug,too many tablets,carbon monoxide,fumes,gas,food poisoning,swallowed poison',
+fever:'fever,hot body,temperature,high temperature,malaria,chills,shivering,typhoid,flu,cold,cough,sore throat,body ache,body pain,headache,head hurts,vomiting,vomit,nausea,diarrhoea,diarrhea,stomach pain,stomach ache,belly pain,toothache,earache,dehydrated,tired,infection,pain,sick,unwell,not feeling well',
+other:'other,not sure,unknown,dont know,symptom,symptoms,help,emergency'
+};
+var $=function(i){return document.getElementById(i)};
+var cur=null,idx=0,voice=true,ac=null,mt=null,tt=null,tleft=600,ty=null,SAMPLE=null;
+var CHK='<svg class="chk" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="2"/><path d="M6 12l4 5 8-10"/></svg>';
+var ASKI='<svg class="chk" viewBox="0 0 24 24"><circle cx="10" cy="10" r="7"/><path d="M15 15l7 7"/></svg>';
+try{if(window.claude&&claude.use)claude.use('sample').then(function(s){SAMPLE=s}).catch(function(){})}catch(e){}
+
+function setNum(n){$('sos').href=$('sos2').href='tel:'+n;$('sos').textContent='CALL '+n+' NOW';$('sos2').textContent='CALL '+n}
+$('num').onchange=function(){setNum(this.value)};
+setTimeout(function(){$('boot').style.width='100%'},100);
+
+function rows(list,msg,q){var b=$('list');b.innerHTML='';
+if(msg){var m=document.createElement('div');m.className='msg';m.innerHTML=msg;b.appendChild(m)}
+list.forEach(function(f){var r=document.createElement('button');r.className='row';
+r.innerHTML=CHK+'<span class="rn">'+f.name+'<small>'+f.sub+'</small></span><span>[GO]</span>';
+r.onclick=function(){go(f)};b.appendChild(r)});
+if(q){var a=document.createElement('button');a.className='row';
+a.innerHTML=ASKI+'<span class="rn">ASK ANYTHING<small>Get steps for this search</small></span><span>[GO]</span>';
+a.onclick=function(){askAI(q)};b.appendChild(a)}}
+rows(FLOWS);
+
+function search(q){q=q.trim();var l=q.toLowerCase();
+if(!l){rows(FLOWS);return}
+var tk=l.split(/[^a-z0-9]+/);
+function hit(k){if(k.indexOf(' ')>=0)return l.indexOf(k)>=0;
+return tk.some(function(t){return t.length>2&&(t==k||(k.indexOf(t)==0&&t.length>=4)||(t.indexOf(k)==0&&k.length>=4))})}
+var hits=FLOWS.map(function(f){var s=0;KW[f.id].split(',').forEach(function(k){if(hit(k))s++});if(f.name.toLowerCase().indexOf(l)>=0)s+=2;return{f:f,s:s}})
+.filter(function(h){return h.s>0}).sort(function(a,b){return b.s-a.s}).map(function(h){return h.f}).slice(0,6);
+var none=!hits.length;
+if(none)hits=FLOWS.filter(function(f){return f.id=='other'});
+rows(hits,none?'&gt; NO EXACT MATCH. Showing general advice. If serious, call '+$('num').value+' now.':'&gt; POSSIBLE MATCHES. If someone is in danger, call '+$('num').value+' first.',q)}
+$('q').oninput=function(){search(this.value)};
+$('q').onkeydown=function(e){if(e.key=='Enter'&&this.value.trim())askAI(this.value.trim())};
+var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+if(!SR)$('mic').style.display='none';
+$('mic').onclick=function(){try{var r=new SR();r.lang='en-US';r.onresult=function(e){$('q').value=e.results[0][0].transcript;search($('q').value)};r.start()}catch(e){}};
+
+var PROMPT='You are a first aid guide inside a phone app. A stressed bystander searched for: "';
+var PROMPT2='". Reply ONLY with JSON: {"off_topic":boolean,"title":"2-3 word name, plain words","summary":"under 8 words","figure":"one of cpr|heart|stroke|bleed|faint|mind|choke|burn|seizure|general","steps":["..."],"poses":["one key per step, same order"]}. Pose keys and what they show: '+POSEGLOSS+' Rules: 4 to 7 steps, each under 25 words, plain language, one action per step. If the situation could be serious, step 1 is to call emergency services. Give only safe, widely accepted first aid. No medicine doses, no diagnosis. For self-harm or suicide: stay with the person, remove danger if safe, call emergency services or a crisis line, never describe methods. If the search is not about health, injury or safety, set off_topic true and steps [].';
+function askAI(q){var b=$('list');
+if(!SAMPLE){rows([],'&gt; ONLINE SEARCH IS NOT AVAILABLE HERE. If serious, call '+$('num').value+' now.');return}
+b.innerHTML='<div class="msg">&gt; THINKING... PLEASE WAIT.</div>';
+SAMPLE.json(PROMPT+q.slice(0,200).replace(/"/g,"'")+PROMPT2+' Write the title, summary and steps in '+LN[SET.lang]+'.').then(function(r){
+if(!r||r.off_topic||!r.steps||!r.steps.length){rows([],'&gt; THAT DOES NOT LOOK LIKE A FIRST AID TOPIC. Try describing a symptom or injury.');return}
+var fig=S[r.figure]?r.figure:'general';
+go({ai:1,id:fig,fig:fig,name:String(r.title||'Help').toUpperCase().slice(0,22),sub:r.summary||'',tool:fig=='cpr'?'metro':fig=='bleed'?'timer':'',
+poses:(Array.isArray(r.poses)?r.poses:[]).slice(0,7).map(function(k){return S[k]?k:fig}).concat(['general']),steps:r.steps.slice(0,7).concat(['This is general guidance, not a diagnosis. See a doctor as soon as you can.'])})
+}).catch(function(e){rows([],'&gt; COULD NOT GET AN ANSWER'+(e&&e.code=='rate_limited'?' (too many tries, wait a moment)':'')+'. If serious, call '+$('num').value+' now.',q)})}
+
+var SET={lang:'en',gender:'f',theme:'light'};
+try{var sv=JSON.parse(localStorage.getItem('faSet')||'{}');if(sv.lang)SET.lang=sv.lang;if(sv.gender)SET.gender=sv.gender;if(sv.theme)SET.theme=sv.theme}catch(e){}
+function saveSet(){try{localStorage.setItem('faSet',JSON.stringify(SET))}catch(e){}}
+var LN={en:'English',yo:'Yoruba',ig:'Igbo'},LT={en:'en-US',yo:'yo-NG',ig:'ig-NG'};
+var TEST={en:'This is how I will guide you. Stay calm.',yo:'Fara balẹ̀. Èmi yóò tọ́ ọ sọ́nà.',ig:'Nwee udo. Aga m eduzi gị nke ọma.'};
+var EX=[{t:'Five minutes left. Keep pressing.'},{t:'Ten minutes are up. Check the wound gently. If it is still bleeding, keep pressing and wait for help.'}];
+function exl(i){var t=SET.lang!='en'&&TR[SET.lang]&&TR[SET.lang].ex;return (t&&t[i])||EX[i].t}
+function stepsOf(f){var t=SET.lang!='en'&&TR[SET.lang]&&TR[SET.lang][f.id];return t||f.steps}
+function isF(n){return /female|samantha|zira|susan|karen|moira|tessa|victoria|fiona|serena|hazel|jenny|aria|libby|sonia|catherine|kate|joanna|nicky|amy|emma|salli|ivy|kendra|kimberly|ava/i.test(n)}
+function isM(n){return !/female/i.test(n)&&/male|david|mark|daniel|alex|fred|george|james|guy|ryan|richard|thomas|oliver|arthur|brian|matthew|joey|justin|russell|gordon|rishi/i.test(n)}
+function pickVoice(){if(!('speechSynthesis' in window))return null;
+var pool=speechSynthesis.getVoices().filter(function(x){return x.lang.toLowerCase().replace('_','-').indexOf(SET.lang)==0});
+if(!pool.length)return null;var w=SET.gender=='m'?isM:isF;
+return pool.filter(function(x){return w(x.name)})[0]||pool[0]}
+function stopVoice(){if('speechSynthesis' in window)speechSynthesis.cancel()}
+function say(t){if(!voice)return;stopVoice();$('vnote').textContent='';
+if(!('speechSynthesis' in window))return;
+var v=pickVoice();
+if(SET.lang!='en'&&!v){$('vnote').textContent='> No '+LN[SET.lang]+' voice on this phone. Read the text, or add a '+LN[SET.lang]+' voice in phone settings.';return}
+var u=new SpeechSynthesisUtterance(t);if(v){u.voice=v;u.lang=v.lang}else u.lang=LT[SET.lang];
+var m=SET.gender=='m';u.rate=.92;u.pitch=m?(v&&isM(v.name)?1:.7):(v&&isF(v.name)?1.05:1.12);speechSynthesis.speak(u)}
+function vmsg(){var m='';
+if(SET.lang!='en')m=pickVoice()?'> '+LN[SET.lang]+' is in beta. Ask a native speaker to check it.':'> No '+LN[SET.lang]+' voice found on this phone. Steps will show as text only.';
+$('vmsg').textContent=m}
+$('slang').value=SET.lang;$('sgen').value=SET.gender;vmsg();
+if('speechSynthesis' in window)speechSynthesis.onvoiceschanged=vmsg;
+$('slang').onchange=function(){SET.lang=this.value;saveSet();vmsg()};
+$('sgen').onchange=function(){SET.gender=this.value;saveSet()};
+$('stest').onclick=function(){var v=voice;voice=true;say(TEST[SET.lang]);voice=v};
+function applyTheme(){document.documentElement.setAttribute('data-theme',SET.theme);var m=document.querySelector('meta[name=theme-color]');if(m)m.content=SET.theme=='dark'?'#000000':'#ffffff';$('sthm').value=SET.theme}
+$('sthm').onchange=function(){SET.theme=this.value;saveSet();applyTheme()};
+$('thm').onclick=function(){SET.theme=SET.theme=='dark'?'light':'dark';saveSet();applyTheme()};
+applyTheme();
+function typeIn(t){clearInterval(ty);var el=$('step'),i=0;el.textContent='> ';
+if(matchMedia('(prefers-reduced-motion:reduce)').matches){el.textContent='> '+t;return}
+ty=setInterval(function(){i++;el.textContent='> '+t.slice(0,i);if(i>=t.length)clearInterval(ty)},18)}
+
+function go(f){cur=f;idx=0;f.use=f.ai?f.steps:stepsOf(f);f.en=SET.lang!='en'&&!f.ai&&f.use===f.steps;$('vnote').textContent='';$('home').style.display='none';$('play').style.display='block';$('wt').textContent=f.name.replace(/ /g,'_')+'.exe';
+
+$('metro').className='pn tool'+(f.tool=='metro'?' show':'');$('timer').className='pn tool'+(f.tool=='timer'?' show':'');
+stopAll();render(true);window.scrollTo(0,0)}
+function showFig(){var a=cur.ai?cur.poses:STEPFIG[cur.id];var k=a&&a[idx];
+if(!S[k])k=cur.fig||cur.id;if(!S[k])k='general';
+$('fig').innerHTML='<svg class="sc" viewBox="0 0 300 180" role="img" aria-label="Posture for step '+(idx+1)+'">'+S[k]+'</svg>'}
+function render(sp){var s=cur.use;showFig();typeIn(s[idx]);
+$('count').textContent='> STEP '+(idx+1)+' / '+s.length+(cur.en?' [ENGLISH ONLY]':'');$('pf').style.width=Math.round((idx+1)/s.length*100)+'%';
+$('next').innerHTML=idx==s.length-1?'DONE [OK]':'NEXT &#9654;';if(sp)say(s[idx])}
+$('next').onclick=function(){if(idx<cur.use.length-1){idx++;render(true)}else exit()};
+$('back').onclick=function(){if(idx>0){idx--;render(true)}};
+$('rep').onclick=function(){say(cur.use[idx])};
+$('mute').onclick=function(){voice=!voice;this.textContent='VOICE: '+(voice?'ON':'OFF');if(!voice)stopVoice()};
+$('x').onclick=exit;
+function exit(){if($('home').style.display!='none')return;stopAll();clearInterval(ty);stopVoice();
+$('play').style.display='none';$('contacts').style.display='none';$('home').style.display='block';$('wt').textContent='FIRSTAID.exe';search($('q').value)}
+
+var PWA=true,DP=null;
+window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();DP=e});
+if(matchMedia('(display-mode: standalone)').matches||navigator.standalone)$('inst').style.display='none';
+$('inst').onclick=function(){var m=$('imsg');
+if(DP){DP.prompt();DP=null;return}
+m.textContent=PWA?'> iPhone: tap Share, then Add to Home Screen. Android: tap the browser menu, then Install app.':'> This page can only save a shortcut. For full offline use, install from the hosted app copy.'};
+var CT=[],MED='';
+try{CT=JSON.parse(localStorage.getItem('faCt')||'[]');MED=localStorage.getItem('faMed')||''}catch(e){}
+function saveCt(){try{localStorage.setItem('faCt',JSON.stringify(CT))}catch(e){}}
+function ph(p){return String(p).replace(/[^+0-9]/g,'')}
+function renderCt(){var b=$('clist');b.innerHTML='';
+if(!CT.length)b.innerHTML='<div class="msg">&gt; NO CONTACTS YET. Add a family member below.</div>';
+CT.forEach(function(c,i){var r=document.createElement('div');r.className='srow';
+var tx=document.createElement('div');tx.className='stx';tx.textContent=c.n+'  '+c.p;r.appendChild(tx);
+var bt=document.createElement('div');bt.className='sbt';
+var a=document.createElement('a');a.className='b ca';a.href='tel:'+ph(c.p);a.textContent='CALL';bt.appendChild(a);
+var m=document.createElement('a');m.className='b ca';m.href='sms:'+ph(c.p);m.textContent='SMS';bt.appendChild(m);
+var d=document.createElement('button');d.innerHTML='&#10005;';d.setAttribute('aria-label','Delete '+c.n);d.onclick=function(){CT.splice(i,1);saveCt();renderCt()};bt.appendChild(d);
+r.appendChild(bt);b.appendChild(r)})}
+$('cadd').onclick=function(){var n=$('cn').value.trim(),p=$('cp').value.trim();
+if(!n||ph(p).length<3){$('cmsg').textContent='> Enter a name and a phone number.';return}
+if(CT.length>=8){$('cmsg').textContent='> You can save up to 8 contacts.';return}
+CT.push({n:n,p:p});saveCt();$('cn').value=$('cp').value='';$('cmsg').textContent='';renderCt()};
+$('med').value=MED;
+$('med').oninput=function(){MED=this.value;try{localStorage.setItem('faMed',MED)}catch(e){}};
+$('calert').onclick=function(){
+if(!CT.length){$('cmsg').textContent='> Add at least one contact first.';return}
+$('cmsg').textContent='> Getting your location...';
+var nums=CT.map(function(c){return ph(c.p)}).join(',');
+function ready(loc){var m='EMERGENCY. I need help.'+(loc?' My location: https://maps.google.com/?q='+loc:'')+(MED?' Medical info: '+MED:'');
+var a=$('alink');a.href='sms:'+nums+'?&body='+encodeURIComponent(m);a.style.display='block';
+$('cmsg').textContent=loc?'> Location found. Tap the button below to send.':'> No location. Message is ready without it.'}
+if(navigator.geolocation)navigator.geolocation.getCurrentPosition(function(p){ready(p.coords.latitude.toFixed(5)+','+p.coords.longitude.toFixed(5))},function(){ready('')},{timeout:8000});else ready('')};
+$('ctb').onclick=function(){$('home').style.display='none';$('contacts').style.display='block';$('wt').textContent='CONTACTS.exe';$('alink').style.display='none';$('cmsg').textContent='';renderCt();window.scrollTo(0,0)};
+$('cx').onclick=function(){exit()};
+
+function beep(){try{navigator.vibrate&&navigator.vibrate(50)}catch(e){}try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();var o=ac.createOscillator(),v=ac.createGain();
+o.type='square';o.frequency.value=880;v.gain.value=.15;o.connect(v);v.connect(ac.destination);o.start();o.stop(ac.currentTime+.06)}catch(e){}}
+$('mbtn').onclick=function(){if(mt){stopAll();return}beep();mt=setInterval(beep,60000/110);this.textContent='STOP BEAT'};
+function fmt(s){return Math.floor(s/60)+':'+('0'+s%60).slice(-2)}
+$('tbtn').onclick=function(){if(tt){stopAll();return}
+tleft=600;$('clock').textContent=fmt(tleft);this.textContent='STOP TIMER';
+tt=setInterval(function(){tleft--;$('clock').textContent=fmt(tleft);
+if(tleft==300)say(exl(0));
+if(tleft<=0){stopAll();say(exl(1))}},1000)};
+function stopAll(){clearInterval(mt);clearInterval(tt);mt=tt=null;$('mbtn').textContent='START BEAT';$('tbtn').textContent='START 10 MIN TIMER';$('clock').textContent='10:00'}
+try{if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js')}catch(e){}
+</script>
+</body>
+</html>
